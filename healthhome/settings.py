@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
-    'healthhomeapi'
+    'healthhomeapi',
 ]
 
 CORS_ORIGIN_WHITELIST = (

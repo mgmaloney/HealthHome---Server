@@ -15,7 +15,7 @@ def check_user(request):
     user = User.objects.filter(uid=request.data['uid'])
 
     # If authentication was successful, respond with their token
-    if user is not None:
+    if len(list(user)) > 0:
         data = {
             'id': user.id,
             'uid': user.uid,
@@ -37,9 +37,9 @@ def check_user(request):
 
 
 @api_view(['POST'])
-def patient_first_login_check(request):
+def first_login_check(request):
     user = User.objects.filter(first_name=request.data['firstName'], last_name=request.data['lastName'], birthdate=request.data['birthdate'], ssn__endswith=request.data['ssn'])
-    if user is not None:
+    if len(list(user)) > 0:
         user.uid = request.data['uid']
 
     # Return the user info to the client

@@ -18,10 +18,16 @@ from django.contrib import admin
 from django.urls import path
 from rest_framework import routers
 from django.conf.urls import include
+from healthhomeapi.views import first_login_check, check_user, MessageView, AllergyView
+
+router = routers.DefaultRouter(trailing_slash=False)
+router.register(r'messages', MessageView, 'message')
+router.register(r'allergies', AllergyView, 'allergy')
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('checkuser', check_user),
-    path('register', register_user),
+    path('first_login_check', first_login_check),
     path('', include(router.urls)),
 ]

@@ -23,7 +23,7 @@ class MessageView(ViewSet):
             return Response('unable to create message', status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
     
-    @action(methods=['get'])
+    @action(methods=['get'], detail=False)
     def user_messages(self, request):
         try:
             user = User.objects.get(id=request.data['userId'])
