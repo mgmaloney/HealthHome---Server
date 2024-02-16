@@ -13,9 +13,10 @@ def check_user(request):
       request -- The full HTTP request object
     '''
     user = User.objects.filter(uid=request.data['uid'])
-
+    user_list = list(user)
     # If authentication was successful, respond with their token
     if len(list(user)) > 0:
+        user = user[0]
         data = {
             'id': user.id,
             'uid': user.uid,
@@ -39,8 +40,10 @@ def check_user(request):
 @api_view(['POST'])
 def first_login_check(request):
     user = User.objects.filter(first_name=request.data['firstName'], last_name=request.data['lastName'], birthdate=request.data['birthdate'], ssn__endswith=request.data['ssn'])
-    if len(list(user)) > 0:
+    if len(list(user)) == 1:
+        user = user[0]
         user.uid = request.data['uid']
+        user.save()
 
     # Return the user info to the client
         data = {

@@ -17,7 +17,7 @@ class UserView(ViewSet):
             return Response({}, status=status.HTTP_404_NOT_FOUND)
     
     def create(self, request):
-        try:
+        # try:
             user = User.objects.create(
                 first_name = request.data['firstName'],
                 last_name = request.data['lastName'],
@@ -31,9 +31,34 @@ class UserView(ViewSet):
             )
             serializer = UserSerializer(user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        except:
-            return Response({'message': 'unable to create user'})
+        # except:
+        #     return Response({'message': 'unable to create user'})
+    
+    def update(self, request):
+        user = User.objects.get(id=request.data['userId'])
+        
+        user.first_name = request.data['firstName']
+        user.last_name = request.data['lastName']
+        user.email = request.data['email']
+        user.phone_number = request.data['phoneNumber']
+        user.address = request.data['address']
+        user.birthdate = request.data['birthdate']
+        user.ssn = request.data['ssn']
+        user.admin = request.data['admin']
+        user.provider = request.data['provider']
+        
+        user.save()
 
+        serializer = UserSerializer(user)
+        
+        return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+    
+    def destroy(self, request, pk):
+        """only for testing and database cleanup. deletes user from database"""
+        user = User.objects.get(pk=pk)
+        user.delete()
+        return Response(None, status=status.HTTP_204_NO_CONTENT)
+        
 class UserSerializer(serializers.ModelSerializer):
     ssn = serializers.SerializerMethodField()
     class Meta:

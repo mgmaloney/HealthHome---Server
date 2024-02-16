@@ -17,7 +17,7 @@ class PatientView(ViewSet):
             return Response({}, status=status.HTTP_404_NOT_FOUND)
     
     def create(self, request):
-        try:
+        # try:
             patient = User.objects.create(
                 first_name = request.data['firstName'],
                 last_name = request.data['lastName'],
@@ -30,11 +30,34 @@ class PatientView(ViewSet):
                 provider = request.data['provider']
             )
             serializer = PatientSerializer(patient)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        # except:
+        #     return Response({'message': 'unable to create patient'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    def update(self, request, pk):
+        patient = User.objects.get(id=request.data['patientId'])
+        
+        patient.first_name = request.data['firstName']
+        patient.last_name = request.data['lastName']
+        patient.email = request.data['email']
+        patient.phone_number = request.data['phoneNumber']
+        patient.address = request.data['address']
+        patient.birthdate = request.data['birthdate']
+        patient.ssn = request.data['ssn']
+        patient.admin = request.data['admin']
+        patient.provider = request.data['provider']
+        
+        patient.save()
 
+        serializer = PatientSerializer(patient)
+        
+        return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+    
 class PatientSerializer(serializers.ModelSerializer):
     ssn = serializers.SerializerMethodField()
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name', 'birthdate', 'email', 'phone_number', 'address' 'ssn')
+        fields = ('id', 'first_name', 'last_name', 'birthdate', 'email', 'phone_number', 'address', 'ssn')
+    
     def get_ssn(self, obj):
         return obj.ssn[:-4]
