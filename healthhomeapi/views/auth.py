@@ -12,12 +12,14 @@ def check_user(request):
     Method arguments:
       request -- The full HTTP request object
     '''
-    user = User.objects.filter(first_name=request.data['firstName'], last_name=request.data['lastName'], birthdate=request.data['birthdate'], ssn__endswith=request.data['ssn'])
-
+    user = User.objects.filter(uid=request.data['uid'])
+    user_list = list(user)
     # If authentication was successful, respond with their token
-    if user is not None:
+    if len(list(user)) > 0:
+        user = user[0]
         data = {
             'id': user.id,
+            'uid': user.uid,
             'firstName': user.first_name,
             'lastName': user.last_name,
             'email': user.email,
@@ -36,36 +38,29 @@ def check_user(request):
 
 
 @api_view(['POST'])
-def register_user(request):
-    '''Handles the creation of a new user for authentication
-
-    Method arguments:
-      request -- The full HTTP request object
-    '''
-
-    user = User.objects.create(
-        first_name=request.data["first_name"],
-        last_name=request.data["last_name"],
-        email=request.data["email"],
-        phone_number=request.data['phoneNumber'],
-        address=request.data['address'],
-        birthdate=request.data['birthdate'],
-        ssn=request.data['ssn'],
-        admin=request.data['admin'],
-        provider=request.data['provider'],
-    )
+def first_login_check(request):
+    user = User.objects.filter(first_name=request.data['firstName'], last_name=request.data['lastName'], birthdate=request.data['birthdate'], ssn__endswith=request.data['ssn'])
+    if len(list(user)) == 1:
+        user = user[0]
+        user.uid = request.data['uid']
+        user.save()
 
     # Return the user info to the client
-    data = {
-        'id': user.id,
-        'firstName': user.first_name,
-        'lastName': user.last_name,
-        'email': user.email,
-        'phoneNumber': user.phone_number,
-        'address': user.address,
-        'birthdate': user.birthdate,
-        'ssn': user.ssn[:-4],
-        'admin': user.admin,
-        'provider': user.provider
-    }
-    return Response(data, status=status.HTTP_201_CREATED)
+        data = {
+            'id': user.id,
+            'uid': user.uid,
+            'firstName': user.first_name,
+            'lastName': user.last_name,
+            'email': user.email,
+            'phoneNumber': user.phone_number,
+            'address': user.address,
+            'birthdate': user.birthdate,
+            'ssn': user.ssn[:-4],
+            'admin': user.admin,
+            'provider': user.provider
+        }
+        return Response(data, status=status.HTTP_200_OK)
+    
+    else:
+        data = { 'valid': False }
+        return Response(data, status=status.HTTP_404_NOT_FOUND)

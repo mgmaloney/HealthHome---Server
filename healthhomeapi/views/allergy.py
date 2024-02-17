@@ -8,7 +8,9 @@ from healthhomeapi.models import Allergy, User
 
 class AllergyView(ViewSet):
     def create(self, request):
-        patient = User.objects.get(request.data['patientId'])
+        """Handle POST operations
+        Returns Response -- JSON serialized allergy instance"""
+        patient = User.objects.get(id=request.data['patientId'])
         allergy = Allergy.objects.create(
             name = request.data['name'],
             severity = request.data['severity'],
@@ -19,7 +21,7 @@ class AllergyView(ViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
     def update(self, request, pk):
-        patient = User.objects.get(request.data['patientId'])
+        patient = User.objects.get(id=request.data['patientId'])
         allergy = Allergy.objects.get(pk=pk)
         allergy.name = request.data['name']
         allergy.severity = request.data['severity']
@@ -29,22 +31,22 @@ class AllergyView(ViewSet):
         return Response(None, status=status.HTTP_204_NO_CONTENT)
     
     def destroy(self, request, pk):
-        allergy = Allergy.object.get(pk=pk)
+        allergy = Allergy.objects.get(pk=pk)
         allergy.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
     
-    @action(methods='get', detail=False)
+    @action(methods=['get', 'put'], detail=False)
     def patient_allergies(self, request):
-        try:
+        # try:
             patient = User.objects.get(id=request.data['patientId'])
             allergies = Allergy.objects.filter(patient=patient)
             serializer = AllergySerializer(allergies, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
-        except:
-            return Response([], status=status.HTTP_404_NOT_FOUND)
+        # except:
+        #     return Response([], status=status.HTTP_404_NOT_FOUND)
         
 
 class AllergySerializer(serializers.ModelSerializer):
     class Meta:
         model = Allergy
-        fields = ('id', 'name', 'severity', 'reaction')
+        fields = ('id', 'name', 'severity', 'reaction', 'patient')
