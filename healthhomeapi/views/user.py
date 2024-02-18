@@ -27,14 +27,15 @@ class UserView(ViewSet):
                 birthdate = request.data['birthdate'],
                 ssn = request.data['ssn'],
                 admin = request.data['admin'],
-                provider = request.data['provider']
+                provider = request.data['provider'],
+                credential = request.data['credential']
             )
             serializer = UserSerializer(user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         # except:
         #     return Response({'message': 'unable to create user'})
     
-    def update(self, request):
+    def update(self, request, pk):
         user = User.objects.get(id=request.data['userId'])
         
         user.first_name = request.data['firstName']
@@ -46,6 +47,7 @@ class UserView(ViewSet):
         user.ssn = request.data['ssn']
         user.admin = request.data['admin']
         user.provider = request.data['provider']
+        user.credential = request.data['credential']
         
         user.save()
 
@@ -63,6 +65,6 @@ class UserSerializer(serializers.ModelSerializer):
     ssn = serializers.SerializerMethodField()
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name', 'birthdate', 'email', 'phone_number', 'address' 'ssn')
+        fields = ('id', 'first_name', 'last_name', 'credential', 'birthdate', 'email', 'phone_number', 'address', 'ssn')
     def get_ssn(self, obj):
         return obj.ssn[:-4]
