@@ -11,4 +11,6 @@ class User(models.Model):
     ssn = models.CharField(max_length=9, default='')
     admin = models.BooleanField()
     provider = models.BooleanField()
-    credential = models.CharField(max_length=5, default=None, null=True)    
+    credential = models.CharField(max_length=5, default=None, null=True)  
+    sex = models.CharField(max_length=7, default=None, null=True)  
+    gender = models.CharField(max_length=7, default=None, null=True)  
