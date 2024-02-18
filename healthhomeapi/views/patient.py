@@ -26,8 +26,8 @@ class PatientView(ViewSet):
                 address = request.data['address'],
                 birthdate = request.data['birthdate'],
                 ssn = request.data['ssn'],
-                admin = request.data['admin'],
-                provider = request.data['provider']
+                sex = request.data['sex'],
+                gender = request.data['gender']
             )
             serializer = PatientSerializer(patient)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -44,8 +44,8 @@ class PatientView(ViewSet):
         patient.address = request.data['address']
         patient.birthdate = request.data['birthdate']
         patient.ssn = request.data['ssn']
-        patient.admin = request.data['admin']
-        patient.provider = request.data['provider']
+        patient.sex = request.data['sex']
+        patient.gender = request.data['gender']
         
         patient.save()
 
@@ -57,7 +57,7 @@ class PatientSerializer(serializers.ModelSerializer):
     ssn = serializers.SerializerMethodField()
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name', 'birthdate', 'email', 'phone_number', 'address', 'ssn')
+        fields = ('id', 'first_name', 'last_name', 'birthdate', 'sex', 'gender','email', 'phone_number', 'address', 'ssn')
     
     def get_ssn(self, obj):
         return obj.ssn[:-4]
