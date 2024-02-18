@@ -10,4 +10,5 @@ class User(models.Model):
     birthdate = models.CharField(max_length=15, default='')
     ssn = models.CharField(max_length=9, default='')
     admin = models.BooleanField()
-    provider = models.BooleanField()    
+    provider = models.BooleanField()
+    credential = models.CharField(max_length=5, default=None, null=True)    
