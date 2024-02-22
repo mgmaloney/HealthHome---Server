@@ -42,6 +42,15 @@ class MessageView(ViewSet):
         serializer = Message_Serializer(messages, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
+    @action(methods=['get', 'put'], detail=False)
+    def read_message(self, request):
+        try:
+            message = Message.objects.get(id=request.data['messageId'])
+            message.read = True
+            return Response(None, status=status.HTTP_202_ACCEPTED)
+        except:
+            return Response({'failed': 'true'}, status=status.HTTP_304_NOT_MODIFIED)
+    
     def destroy(self, request, pk):
         """only for development build"""
         message = Message.objects.get(pk=pk)
