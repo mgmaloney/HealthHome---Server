@@ -34,7 +34,7 @@ class MessageView(ViewSet):
             return ([], status.HTTP_200_OK)
         
     @action(methods=['get', 'put'], detail=False)
-    def get_conversation(self, request):
+    def get__single_conversation(self, request):
         user = User.objects.get(id=request.data['userId'])
         recipient = User.objects.get(id=request.data['recipientId'])
         messages = Message.objects.filter((Q(sender=user) & Q(recipient=recipient)) | (Q(sender=recipient) & Q(recipient=user))).order_by('-datetime')
