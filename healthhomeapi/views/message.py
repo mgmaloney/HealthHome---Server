@@ -46,6 +46,7 @@ class MessageView(ViewSet):
         try:
             message = Message.objects.get(id=request.data['messageId'])
             message.read = True
+            message.save()
             return Response(None, status=status.HTTP_202_ACCEPTED)
         except:
             return Response({'failed': 'true'}, status=status.HTTP_304_NOT_MODIFIED)
