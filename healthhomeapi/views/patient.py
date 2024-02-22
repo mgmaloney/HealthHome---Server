@@ -10,8 +10,8 @@ from healthhomeapi.models import Message, User
 class PatientView(ViewSet):
     def list(self, request):
         try: 
-            patients = User.objects.filter(provider=False, admin=False)
-            serializer = PatientSerializer(patients)
+            patients = User.objects.filter(Q(provider=False) & Q(admin=False))
+            serializer = PatientSerializer(patients, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except:
             return Response([], status=status.HTTP_200_OK)

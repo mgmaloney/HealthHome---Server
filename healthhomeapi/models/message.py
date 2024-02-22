@@ -6,3 +6,4 @@ class Message(models.Model):
     datetime = models.DateTimeField(auto_now_add=True)
     sender = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='message_sender')
     recipient = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='message_receiver')
+    read= models.BooleanField(default=False)
