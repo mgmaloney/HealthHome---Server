@@ -38,7 +38,6 @@ class MessageView(ViewSet):
         user = User.objects.get(id=request.data['userId'])
         recipient = User.objects.get(id=request.data['recipientId'])
         messages = Message.objects.filter((Q(sender=user) & Q(recipient=recipient)) | (Q(sender=recipient) & Q(recipient=user))).order_by('-datetime')
-        messages_length = len(messages)
         serializer = Message_Serializer(messages, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
