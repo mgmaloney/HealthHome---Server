@@ -60,6 +60,17 @@ class UserView(ViewSet):
         user = User.objects.get(pk=pk)
         user.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
+    
+    @action(methods=['put'], detail=False)
+    def get_providers_and_admins(self, request):
+        providers_and_admins = User.objects.filter(Q(admin=True) | Q(provider=True))
+        serializer = Message_User_Serializer(providers_and_admins, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+        
+class Message_User_Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'first_name', 'last_name', 'credential')
         
 class UserSerializer(serializers.ModelSerializer):
     ssn = serializers.SerializerMethodField()

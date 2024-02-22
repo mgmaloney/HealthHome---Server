@@ -8,6 +8,14 @@ from django.db.models import Q
 from healthhomeapi.models import Message, User
 
 class PatientView(ViewSet):
+    def list(self, request):
+        try: 
+            patients = User.objects.filter(provider=False, admin=False)
+            serializer = PatientSerializer(patients)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except:
+            return Response([], status=status.HTTP_200_OK)
+
     def retrieve(self, request):
         try:
             patient = User.objects.get(id=request.data['patientId'])

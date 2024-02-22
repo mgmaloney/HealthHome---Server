@@ -5,4 +5,4 @@ class Message(models.Model):
     content = models.CharField(max_length=2000, default='')
     datetime = models.DateTimeField(auto_now_add=True)
     sender = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='message_sender')
-    receiver = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='message_receiver')
+    recipient = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='message_receiver')
