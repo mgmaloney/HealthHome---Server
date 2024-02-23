@@ -5,17 +5,19 @@ from rest_framework import serializers, status
 from rest_framework import status
 from rest_framework.decorators import action
 from django.db.models import Q
-from healthhomeapi.models import Message, User
+from healthhomeapi.models import Message, User, Conversation
 
 class MessageView(ViewSet):
     def create(self, request):
         # try:
             sender = User.objects.get(id=request.data['senderId'])
             recipient = User.objects.get(id=request.data['recipientId'])
+            conversation = Conversation.objects.create()
             message = Message.objects.create(
                 content = request.data['content'],
                 sender=sender,
-                recipient=recipient
+                recipient=recipient,
+                conversation=conversation
             )
             serializer = Message_Serializer(message)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -32,14 +34,9 @@ class MessageView(ViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except:
             return ([], status.HTTP_200_OK)
-        
-    @action(methods=['get', 'put'], detail=False)
-    def get__single_conversation(self, request):
-        user = User.objects.get(id=request.data['userId'])
-        recipient = User.objects.get(id=request.data['recipientId'])
-        messages = Message.objects.filter((Q(sender=user) & Q(recipient=recipient)) | (Q(sender=recipient) & Q(recipient=user))).order_by('-datetime')
-        serializer = Message_Serializer(messages, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    
+ 
     
     @action(methods=['get', 'put'], detail=False)
     def read_message(self, request):
@@ -67,4 +64,4 @@ class Message_Serializer(serializers.ModelSerializer):
     recipient = Message_User_Serializer()
     class Meta:
         model = Message
-        fields = ('id', 'content', 'sender', 'recipient', 'datetime')
+        fields = ('id', 'content', 'sender', 'recipient', 'datetime', 'conversation')
