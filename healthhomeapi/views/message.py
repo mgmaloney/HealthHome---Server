@@ -12,7 +12,11 @@ class MessageView(ViewSet):
         # try:
             sender = User.objects.get(id=request.data['senderId'])
             recipient = User.objects.get(id=request.data['recipientId'])
-            conversation = Conversation.objects.create()
+            conversation = ''
+            if 'conversationId' in request.data:
+                conversation = Conversation.objects.get(id=request.data['conversationId'])
+            else:
+                conversation = Conversation.objects.create()
             message = Message.objects.create(
                 content = request.data['content'],
                 sender=sender,
