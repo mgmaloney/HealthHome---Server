@@ -76,7 +76,7 @@ class UserView(ViewSet):
                 user_name = user_name + ' ' + user.credential
             return Response({"userName": user_name}, status=status.HTTP_200_OK)
         except:
-            return Response({}, status=status.HTTP_404_NOT_FOUND)
+            return Response({}, status=status.HTTP_200_OK)
         
 class Message_User_Serializer(serializers.ModelSerializer):
     class Meta:
