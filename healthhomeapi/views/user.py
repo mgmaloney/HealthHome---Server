@@ -66,6 +66,17 @@ class UserView(ViewSet):
         providers_and_admins = User.objects.filter(Q(admin=True) | Q(provider=True))
         serializer = Message_User_Serializer(providers_and_admins, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    @action(methods=['get', 'put'], detail=False) 
+    def get_user_name(self, request):
+        try:
+            user = User.objects.get(id=request.data['userId'])
+            user_name = user.first_name + ' ' + user.last_name
+            if user.provider or user.admin:
+                user_name = user_name + ' ' + user.credential
+            return Response({"userName": user_name}, status=status.HTTP_200_OK)
+        except:
+            return Response({}, status=status.HTTP_200_OK)
         
 class Message_User_Serializer(serializers.ModelSerializer):
     class Meta:

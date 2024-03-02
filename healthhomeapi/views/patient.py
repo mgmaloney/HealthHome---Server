@@ -15,8 +15,9 @@ class PatientView(ViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except:
             return Response([], status=status.HTTP_200_OK)
-
-    def retrieve(self, request):
+    
+    @action(methods=['get', 'put'], detail=False) 
+    def get_single_patient(self, request):
         try:
             patient = User.objects.get(id=request.data['patientId'])
             serializer = PatientSerializer(patient)
