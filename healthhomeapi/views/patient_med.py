@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import serializers, status
 from rest_framework import status
 from rest_framework.decorators import action
-from healthhomeapi.models import PatientMed
+from healthhomeapi.models import PatientMed, User
 
 class PatientMedView(ViewSet):
   def retrieve(self, request, pk):
@@ -14,12 +14,13 @@ class PatientMedView(ViewSet):
   
   @action(methods=['get', 'put'], detail=False)
   def get_all_patient_meds(self, request):
-    patient = request.data['patientId']
-    serializer = PatientMedSerializer(patient.patient_medications)
+    patient = User.objects.get(id=request.data['patient_id'])
+    patient_medications = PatientMed.objects.filter(patient=patient)
+    serializer = PatientMedSerializer(patient_medications, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
   
   def create(self, request):
-    patient = request.data['patientId']
+    patient = User.objects.get(id=request.data['patient_id'])
     patient_med = PatientMed.objects.create(
       patient = patient,
       name = request.data['name'],
@@ -37,6 +38,10 @@ class PatientMedView(ViewSet):
     patient_med.save()
     return Response(None, status=status.HTTP_204_NO_CONTENT)
 
+  def destroy(self, request, pk):
+    patient_med = PatientMed.objects.get(pk=pk)
+    patient_med.delete()
+    return Response(None, status=status.HTTP_204_NO_CONTENT)
 
 
 class PatientMedSerializer(serializers.ModelSerializer):

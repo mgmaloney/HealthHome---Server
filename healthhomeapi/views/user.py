@@ -19,10 +19,10 @@ class UserView(ViewSet):
     def create(self, request):
         # try:
             user = User.objects.create(
-                first_name = request.data['firstName'],
-                last_name = request.data['lastName'],
+                first_name = request.data['first_name'],
+                last_name = request.data['last_name'],
                 email = request.data['email'],
-                phone_number = request.data['phoneNumber'],
+                phone_number = request.data['phone_number'],
                 address = request.data['address'],
                 birthdate = request.data['birthdate'],
                 ssn = request.data['ssn'],
@@ -38,10 +38,10 @@ class UserView(ViewSet):
     def update(self, request, pk):
         user = User.objects.get(id=request.data['userId'])
         
-        user.first_name = request.data['firstName']
-        user.last_name = request.data['lastName']
+        user.first_name = request.data['first_name']
+        user.last_name = request.data['last_name']
         user.email = request.data['email']
-        user.phone_number = request.data['phoneNumber']
+        user.phone_number = request.data['phone_number']
         user.address = request.data['address']
         user.birthdate = request.data['birthdate']
         user.ssn = request.data['ssn']

@@ -19,7 +19,7 @@ class PatientView(ViewSet):
     @action(methods=['get', 'put'], detail=False) 
     def get_single_patient(self, request):
         try:
-            patient = User.objects.get(id=request.data['patientId'])
+            patient = User.objects.get(id=request.data['patient_id'])
             serializer = PatientSerializer(patient)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except:
@@ -28,10 +28,10 @@ class PatientView(ViewSet):
     def create(self, request):
         # try:
             patient = User.objects.create(
-                first_name = request.data['firstName'],
-                last_name = request.data['lastName'],
+                first_name = request.data['first_name'],
+                last_name = request.data['last_name'],
                 email = request.data['email'],
-                phone_number = request.data['phoneNumber'],
+                phone_number = request.data['phone_number'],
                 address = request.data['address'],
                 birthdate = request.data['birthdate'],
                 ssn = request.data['ssn'],
@@ -44,12 +44,12 @@ class PatientView(ViewSet):
         #     return Response({'message': 'unable to create patient'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     def update(self, request, pk):
-        patient = User.objects.get(id=request.data['patientId'])
+        patient = User.objects.get(id=request.data['patient_id'])
         
-        patient.first_name = request.data['firstName']
-        patient.last_name = request.data['lastName']
+        patient.first_name = request.data['first_name']
+        patient.last_name = request.data['last_name']
         patient.email = request.data['email']
-        patient.phone_number = request.data['phoneNumber']
+        patient.phone_number = request.data['phone_number']
         patient.address = request.data['address']
         patient.birthdate = request.data['birthdate']
         patient.ssn = request.data['ssn']

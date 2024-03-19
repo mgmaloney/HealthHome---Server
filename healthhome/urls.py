@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from rest_framework import routers
 from django.conf.urls import include
-from healthhomeapi.views import first_login_check, check_user, MessageView, AllergyView, UserView, PatientView, ConversationView
+from healthhomeapi.views import first_login_check, check_user, MessageView, AllergyView, UserView, PatientView, ConversationView, PatientMedView, DBMedView
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'messages', MessageView, 'message')
@@ -26,6 +26,8 @@ router.register(r'conversations', ConversationView, 'conversation')
 router.register(r'allergies', AllergyView, 'allergy')
 router.register(r'users', UserView, 'user')
 router.register(r'patients', PatientView, 'patient')
+router.register(r'patientmeds', PatientMedView, 'patientmed')
+router.register(r'dbmeds', DBMedView, 'dbmed')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
