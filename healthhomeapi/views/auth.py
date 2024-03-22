@@ -28,7 +28,8 @@ def check_user(request):
             'birthdate': user.birthdate,
             'ssn': user.ssn[:-4],
             'admin': user.admin,
-            'provider': user.provider
+            'provider': user.provider,
+            'credential': user.credential
         }
         return Response(data)
     else:

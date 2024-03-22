@@ -87,6 +87,6 @@ class UserSerializer(serializers.ModelSerializer):
     ssn = serializers.SerializerMethodField()
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name', 'credential', 'birthdate', 'email', 'phone_number', 'address', 'ssn')
+        fields = ('id', 'first_name', 'last_name', 'credential', 'birthdate', 'email', 'phone_number', 'address', 'ssn', 'credential')
     def get_ssn(self, obj):
         return obj.ssn[:-4]

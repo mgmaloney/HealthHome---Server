@@ -43,6 +43,7 @@ class PatientView(ViewSet):
         # except:
         #     return Response({'message': 'unable to create patient'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
+    # @action(methods=['put'], detail=False)
     def update(self, request, pk):
         patient = User.objects.get(id=request.data['patient_id'])
         
