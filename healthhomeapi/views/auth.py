@@ -20,15 +20,16 @@ def check_user(request):
         data = {
             'id': user.id,
             'uid': user.uid,
-            'firstName': user.first_name,
-            'lastName': user.last_name,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
             'email': user.email,
-            'phoneNumber': user.phone_number,
+            'phone_number': user.phone_number,
             'address': user.address,
             'birthdate': user.birthdate,
             'ssn': user.ssn[:-4],
             'admin': user.admin,
-            'provider': user.provider
+            'provider': user.provider,
+            'credential': user.credential
         }
         return Response(data)
     else:
@@ -39,7 +40,7 @@ def check_user(request):
 
 @api_view(['POST'])
 def first_login_check(request):
-    user = User.objects.filter(first_name=request.data['firstName'], last_name=request.data['lastName'], birthdate=request.data['birthdate'], ssn__endswith=request.data['ssn'])
+    user = User.objects.filter(first_name=request.data['first_name'], last_name=request.data['last_name'], birthdate=request.data['birthdate'], ssn__endswith=request.data['ssn'])
     if len(list(user)) == 1:
         user = user[0]
         user.uid = request.data['uid']
@@ -49,10 +50,10 @@ def first_login_check(request):
         data = {
             'id': user.id,
             'uid': user.uid,
-            'firstName': user.first_name,
-            'lastName': user.last_name,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
             'email': user.email,
-            'phoneNumber': user.phone_number,
+            'phone_number': user.phone_number,
             'address': user.address,
             'birthdate': user.birthdate,
             'ssn': user.ssn[:-4],

@@ -38,8 +38,17 @@ class MessageView(ViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except:
             return ([], status.HTTP_200_OK)
+        
     
-    
+    @action(methods=['get', 'put'], detail=False)
+    def unread_messages_count(self, request):
+        try:
+            user = User.objects.get(id=request.data['userId'])
+            message_count = Message.objects.filter(Q(recipient=user) & Q(read=False)).count()
+            return Response(message_count, status=status.HTTP_200_OK)
+        
+        except:
+            return Response({'failed': 'true'}, status=status.HTTP_404_NOT_FOUND)
  
     
     @action(methods=['get', 'put'], detail=False)
